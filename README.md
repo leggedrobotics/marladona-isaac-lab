@@ -1,3 +1,11 @@
+# MARLadona (Work in Progress)
+
+This repository contains the multi-agent training environment for the [MARLadona - Towards Cooperative Team Play Using Multi-Agent
+Reinforcement Learning](https://arxiv.org/pdf/2409.20326) Paper. 
+
+The open-source version of the MARL soccer environment is built on top of IsaacLab. The code is currently still being finalized.  
+
+
 # Template for Isaac Lab Projects
 
 [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
@@ -33,19 +41,19 @@ git clone https://github.com/isaac-sim/IsaacLabExtensionTemplate.git
 git clone git@github.com:isaac-sim/IsaacLabExtensionTemplate.git
 ```
 
-- Throughout the repository, the name `ext_template` only serves as an example and we provide a script to rename all the references to it automatically:
+- Throughout the repository, the name `isaaclab_marl` only serves as an example and we provide a script to rename all the references to it automatically:
 
 ```bash
 # Enter the repository
 cd IsaacLabExtensionTemplate
-# Rename all occurrences of ext_template (in files/directories) to your_fancy_extension_name
+# Rename all occurrences of isaaclab_marl (in files/directories) to your_fancy_extension_name
 python scripts/rename_template.py your_fancy_extension_name
 ```
 
 - Using a python interpreter that has Isaac Lab installed, install the library
 
 ```bash
-python -m pip install -e source/ext_template
+python -m pip install -e source/isaaclab_marl
 ```
 
 - Verify that the extension is correctly installed by running the following command:
@@ -64,7 +72,7 @@ If everything executes correctly, it should create a file .python.env in the `.v
 
 ### Setup as Omniverse Extension (Optional)
 
-We provide an example UI extension that will load upon enabling your extension defined in `source/ext_template/ext_template/ui_extension_example.py`.
+We provide an example UI extension that will load upon enabling your extension defined in `source/isaaclab_marl/isaaclab_marl/ui_extension_example.py`.
 
 To enable your extension, follow these steps:
 
@@ -177,7 +185,7 @@ In some VsCode versions, the indexing of part of the extensions is missing. In t
 ```json
 {
     "python.analysis.extraPaths": [
-        "<path-to-ext-repo>/source/ext_template"
+        "<path-to-ext-repo>/source/isaaclab_marl"
     ]
 }
 ```
