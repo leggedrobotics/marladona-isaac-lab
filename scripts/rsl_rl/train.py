@@ -8,13 +8,20 @@
 """Launch Isaac Sim Simulator first."""
 
 import argparse
+import numpy as np
 import sys
+import torch
 
 from isaaclab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
 
+
+normal_repr = torch.Tensor.__repr__
+torch.Tensor.__repr__ = lambda self: f"{normal_repr(self)} \n {self.shape}, {self.min()}, {self.max()}"
+np.set_printoptions(edgeitems=3, linewidth=1000, threshold=100)
+torch.set_printoptions(edgeitems=3, linewidth=1000, threshold=100)
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -49,7 +56,9 @@ import os
 import torch
 from datetime import datetime
 
-from rsl_rl.runners import OnPolicyRunner
+# from rsl_rl.runners import OnPolicyRunner
+from rsl_marl.runners import OnPolicyRunner
+from rsl_marl.utils.custom_vecenv_wrapper import CustomVecEnvWrapper
 
 from isaaclab.envs import (
     DirectMARLEnv,
@@ -60,12 +69,12 @@ from isaaclab.envs import (
 )
 from isaaclab.utils.dict import print_dict
 from isaaclab.utils.io import dump_pickle, dump_yaml
-from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper
+from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg
 from isaaclab_tasks.utils import get_checkpoint_path
 from isaaclab_tasks.utils.hydra import hydra_task_config
 
 # Import extensions to set up environment tasks
-import ext_template.tasks  # noqa: F401
+import isaaclab_marl.tasks  # noqa: F401
 
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
@@ -117,12 +126,12 @@ def main(env_cfg: ManagerBasedRLEnvCfg | DirectRLEnvCfg | DirectMARLEnvCfg, agen
         env = multi_agent_to_single_agent(env)
 
     # wrap around environment for rsl-rl
-    env = RslRlVecEnvWrapper(env)
+    env = CustomVecEnvWrapper(env)
 
     # create runner from rsl-rl
-    runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device)
+    runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=log_dir, device=agent_cfg.device, command_args=args_cli)
     # write git state to logs
-    runner.add_git_repo_to_log(__file__)
+    # runner.add_git_repo_to_log(__file__)
     # save resume path before creating a new log_dir
     if agent_cfg.resume:
         # get path to previous checkpoint

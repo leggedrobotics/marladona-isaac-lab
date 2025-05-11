@@ -8,6 +8,14 @@ from isaaclab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
+import numpy as np
+import torch
+
+normal_repr = torch.Tensor.__repr__
+torch.Tensor.__repr__ = lambda self: f"{normal_repr(self)} \n {self.shape}, {self.min()}, {self.max()}"
+np.set_printoptions(edgeitems=3, linewidth=1000, threshold=100)
+torch.set_printoptions(edgeitems=3, linewidth=1000, threshold=100)
+
 
 # add argparse arguments
 parser = argparse.ArgumentParser(description="Train an RL agent with RSL-RL.")
@@ -35,29 +43,41 @@ simulation_app = app_launcher.app
 
 import gymnasium as gym
 import os
-import torch
 
 from rsl_rl.runners import OnPolicyRunner
 
 from isaaclab.envs import DirectMARLEnv, multi_agent_to_single_agent
 from isaaclab.utils.dict import print_dict
-from isaaclab_rl.rsl_rl import RslRlOnPolicyRunnerCfg, RslRlVecEnvWrapper, export_policy_as_jit, export_policy_as_onnx
 from isaaclab_tasks.utils import get_checkpoint_path, parse_env_cfg
 
+from rsl_marl.runners import OnPolicyRunner
+from rsl_marl.utils.custom_vecenv_wrapper import CustomVecEnvWrapper
+
 # Import extensions to set up environment tasks
-import ext_template.tasks  # noqa: F401
+import isaaclab_marl.tasks  # noqa: F401
+
+from isaaclab_marl.config import WORKSPACE_ROOT_DIR
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from isaaclab_marl.tasks.soccer.soccer_marl_env_cfg import SoccerMARLEnvCfg
+    from isaaclab_marl.tasks.soccer.agents.soccer_marl_ppo_runner_cfg import SoccerMARLPPORunnerCfg
 
 
 def main():
     """Play with RSL-RL agent."""
     # parse configuration
-    env_cfg = parse_env_cfg(
+    env_cfg: SoccerMARLEnvCfg = parse_env_cfg(
         args_cli.task, device=args_cli.device, num_envs=args_cli.num_envs, use_fabric=not args_cli.disable_fabric
     )
-    agent_cfg: RslRlOnPolicyRunnerCfg = cli_args.parse_rsl_rl_cfg(args_cli.task, args_cli)
+
+    agent_cfg: SoccerMARLPPORunnerCfg = cli_args.parse_rsl_rl_cfg(args_cli.task, args_cli)
+
+    agent_cfg.policy_replay.dynamic_generate_replay_level = False
 
     # specify directory for logging experiments
-    log_root_path = os.path.join("logs", "rsl_rl", agent_cfg.experiment_name)
+    log_root_path = os.path.join(WORKSPACE_ROOT_DIR, "../example_policy")
     log_root_path = os.path.abspath(log_root_path)
     print(f"[INFO] Loading experiment from directory: {log_root_path}")
     resume_path = get_checkpoint_path(log_root_path, agent_cfg.load_run, agent_cfg.load_checkpoint)
@@ -82,36 +102,30 @@ def main():
         env = multi_agent_to_single_agent(env)
 
     # wrap around environment for rsl-rl
-    env = RslRlVecEnvWrapper(env)
+    env = CustomVecEnvWrapper(env)
 
     print(f"[INFO]: Loading model checkpoint from: {resume_path}")
     # load previously trained model
-    ppo_runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device)
+    ppo_runner = OnPolicyRunner(env, agent_cfg.to_dict(), log_dir=None, device=agent_cfg.device, command_args=args_cli)
     ppo_runner.load(resume_path)
 
     # obtain the trained policy for inference
     policy = ppo_runner.get_inference_policy(device=env.unwrapped.device)
 
-    # export policy to onnx/jit
-    export_model_dir = os.path.join(os.path.dirname(resume_path), "exported")
-    export_policy_as_jit(
-        ppo_runner.alg.actor_critic, ppo_runner.obs_normalizer, path=export_model_dir, filename="policy.pt"
-    )
-    export_policy_as_onnx(
-        ppo_runner.alg.actor_critic, normalizer=ppo_runner.obs_normalizer, path=export_model_dir, filename="policy.onnx"
-    )
-
     # reset environment
-    obs, _ = env.get_observations()
+    obs_dict = env.get_observations()
     timestep = 0
+    env_data = env.unwrapped.env_data
     # simulate environment
     while simulation_app.is_running():
         # run everything in inference mode
         with torch.inference_mode():
             # agent stepping
+            obs = torch.cat([obs_dict["policy"], obs_dict["neighbor"]], dim=1)
+
             actions = policy(obs)
-            # env stepping
-            obs, _, _, _ = env.step(actions)
+
+            obs_dict, _, _, _ = env.step(actions)
         if args_cli.video:
             timestep += 1
             # Exit the play loop after recording one video
