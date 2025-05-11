@@ -4,7 +4,7 @@ Reinforcement Learning](https://arxiv.org/pdf/2409.20326) Paper.
 
 The open-source version of the MARL soccer environment is built on top of IsaacLab and based on the [IsaacLabExtensionTemplate](https://github.com/isaac-sim/IsaacLabExtensionTemplate.git) 
 
-This repository contains the multi-agent soccer environment `isaaclab_marl` as well as a heavyily modified `rsl_marl` training pipeline in implementation in `rsl_marl`. The original implementation as well as result from the paper are based on Isaac Gym. This migration effort were made due to the deprecation of Isaac Gym.        
+This repository contains the multi-agent soccer environment `isaaclab_marl` and a heavily modified `rsl_rl` training pipeline implemented as `rsl_marl`. The original environment and results from the paper are based on Isaac Gym. This migration effort was made due to the deprecation of Isaac Gym.        
 
 <!-- ![Isaaclab Play](output-1.gif )   -->
 <!-- *Typical Gameplay in Isaaclab * -->
@@ -22,7 +22,7 @@ This repository contains the multi-agent soccer environment `isaaclab_marl` as w
 
 - Install Isaac Sim and Lab by following the [installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html). We recommend using the conda installation as it simplifies calling Python scripts from the terminal.
 
-- Clone this repository separately from the Isaac Lab installation (i.e. outside the `IsaacLab` directory):
+- Clone this repository separately from the Isaac Lab installation (i.e., outside the `IsaacLab` directory):
 
 ```bash
 # Option 1: HTTPS
@@ -32,7 +32,7 @@ git clone https://github.com/leggedrobotics/marladona-isaac-lab.git
 git clone git@github.com:leggedrobotics/marladona-isaac-lab.git
 ```
 
-- Throughout the repository, the name `isaaclab_marl` only serves as an example and we provide a script to rename all the references to it automatically:
+- Throughout the repository, the name `isaaclab_marl` only serves as an example, and we provide a script to rename all the references to it automatically:
 
 ```bash
 # Enter the repository
