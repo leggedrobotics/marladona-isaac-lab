@@ -15,7 +15,7 @@ This repository contains the multi-agent soccer environment `isaaclab_marl` as w
 
 <figure>
   <img src="gifs/isaacgym.gif" alt="Isaaclab Play" title="Higher Agent Number (Isaac Gym)">
-  <figcaption><em>Works Great for Any Agent Number (Isaac Gym)</em></figcaption>
+  <figcaption><em>Work great for any Agent Number (Isaac Gym)</em></figcaption>
 </figure>
 
 ## Installation
