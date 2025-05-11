@@ -33,7 +33,7 @@ class TerrainCfg(TerrainGeneratorCfg):
     num_rows = len(FIELD_LEVEL_SETTINGS)  # 8  # number of terrain rows (levels)
     default_eval_level = 2  # default evaluation level
 
-    num_cols = 1  # number of terrain cols (types)
+    num_cols = 10  # number of terrain cols (types)
     # heightfield specific
     horizontal_scale = 0.1  # [m]
     vertical_scale = 0.005  # [m]
@@ -42,4 +42,4 @@ class TerrainCfg(TerrainGeneratorCfg):
     # slopes above this threshold will be corrected to vertical surfaces
 
     sub_terrains = {"soccer_field": SoccerFieldCfg()}
-    create_field_visuals = False
+    create_field_visuals = True

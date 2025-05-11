@@ -1,67 +1,70 @@
-# MARLadona (Work in Progress)
-
+# MARLadona 
 This repository contains the multi-agent training environment for the [MARLadona - Towards Cooperative Team Play Using Multi-Agent
 Reinforcement Learning](https://arxiv.org/pdf/2409.20326) Paper.
 
-The open-source version of the MARL soccer environment is built on top of IsaacLab. The code is currently still being finalized.
+The open-source version of the MARL soccer environment is built on top of IsaacLab and based on the [IsaacLabExtensionTemplate](https://github.com/isaac-sim/IsaacLabExtensionTemplate.git) 
 
+This repository contains the multi-agent soccer environment `isaaclab_marl` as well as a heavyily modified `rsl_marl` training pipeline in implementation in `rsl_marl`. The original implementation as well as result from the paper are based on Isaac Gym. This migration effort were made due to the deprecation of Isaac Gym.        
 
-# Template for Isaac Lab Projects
+<!-- ![Isaaclab Play](output-1.gif )   -->
+<!-- *Typical Gameplay in Isaaclab * -->
+<figure>
+  <img src="gifs/isaaclab.gif" alt="Isaaclab Play" title="Typical Gameplay in Isaac Lab">
+  <figcaption><em>Typical Gameplay in Isaaclab</em></figcaption>
+</figure>
 
-[![IsaacSim](https://img.shields.io/badge/IsaacSim-4.5.0-silver.svg)](https://docs.omniverse.nvidia.com/isaacsim/latest/overview.html)
-[![Isaac Lab](https://img.shields.io/badge/IsaacLab-2.1.0-silver)](https://isaac-sim.github.io/IsaacLab)
-[![Python](https://img.shields.io/badge/python-3.10-blue.svg)](https://docs.python.org/3/whatsnew/3.10.html)
-[![Linux platform](https://img.shields.io/badge/platform-linux--64-orange.svg)](https://releases.ubuntu.com/20.04/)
-[![Windows platform](https://img.shields.io/badge/platform-windows--64-orange.svg)](https://www.microsoft.com/en-us/)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://pre-commit.com/)
-[![License](https://img.shields.io/badge/license-MIT-yellow.svg)](https://opensource.org/license/mit)
-
-## Overview
-
-This repository serves as a template for building projects or extensions based on Isaac Lab. It allows you to develop in an isolated environment, outside of the core Isaac Lab repository.
-
-**Key Features:**
-
-- `Isolation` Work outside the core Isaac Lab repository, ensuring that your development efforts remain self-contained.
-- `Flexibility` This template is set up to allow your code to be run as an extension in Omniverse.
-
-**Keywords:** extension, template, isaaclab
+<figure>
+  <img src="gifs/isaacgym.gif" alt="Isaaclab Play" title="Higher Agent Number (Isaac Gym)">
+  <figcaption><em>Works Great for Any Agent Number (Isaac Gym)</em></figcaption>
+</figure>
 
 ## Installation
 
-- Install Isaac Lab by following the [installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html). We recommend using the conda installation as it simplifies calling Python scripts from the terminal.
+- Install Isaac Sim and Lab by following the [installation guide](https://isaac-sim.github.io/IsaacLab/main/source/setup/installation/index.html). We recommend using the conda installation as it simplifies calling Python scripts from the terminal.
 
 - Clone this repository separately from the Isaac Lab installation (i.e. outside the `IsaacLab` directory):
 
 ```bash
 # Option 1: HTTPS
-git clone https://github.com/isaac-sim/IsaacLabExtensionTemplate.git
+git clone https://github.com/leggedrobotics/marladona-isaac-lab.git
 
 # Option 2: SSH
-git clone git@github.com:isaac-sim/IsaacLabExtensionTemplate.git
+git clone git@github.com:leggedrobotics/marladona-isaac-lab.git
 ```
 
 - Throughout the repository, the name `isaaclab_marl` only serves as an example and we provide a script to rename all the references to it automatically:
 
 ```bash
 # Enter the repository
-cd IsaacLabExtensionTemplate
-# Rename all occurrences of isaaclab_marl (in files/directories) to your_fancy_extension_name
-python scripts/rename_template.py your_fancy_extension_name
+cd marladona-isaac-lab
 ```
 
 - Using a python interpreter that has Isaac Lab installed, install the library
 
 ```bash
 python -m pip install -e source/isaaclab_marl
+python -m pip install -e source/rsl_marl
 ```
 
 - Verify that the extension is correctly installed by running the following command:
 
 ```bash
-python scripts/rsl_rl/train.py --task=Template-Isaac-Velocity-Rough-Anymal-D-v0
+python scripts/rsl_rl/train.py --task=Isaac-Soccer-v0 
 ```
 
+An example policy is provided in the example_policy folder. You can test its performance by running the following command:
+
+```bash
+python scripts/rsl_rl/play.py --task=Isaac-Soccer-Play-v0 --load_run=24_09_28_11_56_41_3v3 
+```
+Note: The number of agents can be configured via the `SoccerMARLEnvPlayCfg` class.
+
+### Useful Visualization Tools (Migration in Progress) ### 
+
+## Trajectory Analyser ## 
+![Trajectory Analyser](gifs/3v3_traj_raw.gif)
+## Value Function Visualizer ## 
+![Value Functions](gifs/value_function.gif)
 ### Set up IDE (Optional)
 
 To setup the IDE, please follow these instructions:
