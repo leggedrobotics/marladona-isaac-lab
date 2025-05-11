@@ -7,11 +7,10 @@ from __future__ import annotations
 
 import torch
 from collections.abc import Sequence
+from prettytable import PrettyTable
 from typing import TYPE_CHECKING
 
 import omni.log
-
-from prettytable import PrettyTable
 
 import isaaclab.utils.string as string_utils
 from isaaclab.assets.articulation import Articulation
@@ -25,8 +24,9 @@ if TYPE_CHECKING:
     from isaaclab_marl.assets.agents import Agents
 
 from isaaclab.managers.action_manager import ActionTermCfg
-from isaaclab_marl.utils.math_utils import rotate2d
 from isaaclab.utils.math import quat_rotate_inverse
+
+from isaaclab_marl.utils.math_utils import rotate2d
 
 
 class MultiAgentAction:

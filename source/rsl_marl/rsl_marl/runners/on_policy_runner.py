@@ -3,32 +3,31 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+import atexit
+import numpy as np
+import statistics
+
 # python
 import time
-import statistics
-import atexit
-from collections import deque
-
 
 # torch
 import torch
-import numpy as np
+from collections import deque
 from copy import deepcopy
+from typing import TYPE_CHECKING
+
+from rsl_marl.algorithms import PPO
+from rsl_marl.modules import ActorCriticBeta
+from rsl_marl.modules.bots import Bots
+from rsl_marl.modules.policy_replay_manager import PolicyReplayManager
+from rsl_marl.utils.log_manager import LogManager
 
 # rsl-rl
 from rsl_rl.env import VecEnv
-from rsl_marl.algorithms import PPO
-from rsl_marl.modules import ActorCriticBeta
-from rsl_marl.utils.log_manager import LogManager
-from rsl_marl.modules.policy_replay_manager import PolicyReplayManager
-
-from rsl_marl.modules.bots import Bots
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from isaaclab_marl.tasks.soccer.soccer_marl_env_cfg import SoccerMARLEnvCfg
     from isaaclab_marl.assets.env_data import EnvData
+    from isaaclab_marl.tasks.soccer.soccer_marl_env_cfg import SoccerMARLEnvCfg
 
 
 class OnPolicyRunner:

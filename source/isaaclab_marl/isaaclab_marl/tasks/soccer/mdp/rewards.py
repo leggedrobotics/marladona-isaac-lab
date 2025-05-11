@@ -4,7 +4,6 @@ import torch
 
 # solves circular imports of LeggedEnv
 from torch.nn.functional import normalize
-
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:

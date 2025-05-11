@@ -14,24 +14,22 @@ from collections.abc import Sequence
 from prettytable import PrettyTable
 from typing import TYPE_CHECKING
 
-from isaaclab.utils import modifiers
-from isaaclab.utils.buffers import CircularBuffer
-
 from isaaclab.managers.manager_base import ManagerBase, ManagerTermBase
 from isaaclab.managers.manager_term_cfg import ObservationGroupCfg, ObservationTermCfg
 from isaaclab.managers.observation_manager import ObservationManager
+from isaaclab.utils import modifiers
+from isaaclab.utils.buffers import CircularBuffer
 
 if TYPE_CHECKING:
     from isaaclab.envs import ManagerBasedEnv
 
 
 class MultiAgentObservationManager(ObservationManager):
-    
     @property
     def num_agents_per_env(self) -> int:
         """Number of environments."""
         return self._env.env_data.num_agents_per_team * 2
-    
+
     def compute_group(self, group_name: str) -> torch.Tensor | dict[str, torch.Tensor]:
         """Computes the observations for a given group.
 
@@ -95,8 +93,10 @@ class MultiAgentObservationManager(ObservationManager):
             if term_cfg.history_length > 0:
                 self._group_obs_term_history_buffer[group_name][term_name].append(obs)
                 if term_cfg.flatten_history_dim:
-                    group_obs[term_name] = self._group_obs_term_history_buffer[group_name][term_name].buffer.transpose(-1, -2).reshape(
-                        obs.shape[0], -1
+                    group_obs[term_name] = (
+                        self._group_obs_term_history_buffer[group_name][term_name]
+                        .buffer.transpose(-1, -2)
+                        .reshape(obs.shape[0], -1)
                     )
                 else:
                     group_obs[term_name] = self._group_obs_term_history_buffer[group_name][term_name].buffer
@@ -152,7 +152,7 @@ class MultiAgentObservationManager(ObservationManager):
             self._group_obs_class_term_cfgs[group_name] = list()
 
             self._group_symmetry_index[group_name] = list()
-            
+
             group_entry_history_buffer: dict[str, CircularBuffer] = dict()
             # read common config for the group
             self._group_obs_concatenate[group_name] = group_cfg.concatenate_terms
@@ -188,18 +188,18 @@ class MultiAgentObservationManager(ObservationManager):
                 # add term config to list to list
                 self._group_obs_term_names[group_name].append(term_name)
                 self._group_obs_term_cfgs[group_name].append(term_cfg)
-                
-                
+
                 # call function the first time to fill up dimensions
                 obs_dims = tuple(term_cfg.func(self._env, **term_cfg.params).shape)
                 if group_name in ["policy", "critic", "neighbor", "neighbor_critic"]:
                     if "pose" in term_name or "vel" in term_name or "pos" in term_name:
-
-                        hist = (term_cfg.history_length if term_cfg.history_length else 1)
+                        hist = term_cfg.history_length if term_cfg.history_length else 1
                         unit_length = (
                             2
                             if "ball" in term_name
-                            else (4 if ("expand_rot" in term_cfg.params.keys() and term_cfg.params["expand_rot"]) else 3)
+                            else (
+                                4 if ("expand_rot" in term_cfg.params.keys() and term_cfg.params["expand_rot"]) else 3
+                            )
                         )
 
                         num_units = obs_dims[-1] // unit_length

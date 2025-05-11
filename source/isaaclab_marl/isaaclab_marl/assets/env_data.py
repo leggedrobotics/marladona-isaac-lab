@@ -1,11 +1,11 @@
 from __future__ import annotations
+
 import torch
+from typing import TYPE_CHECKING
 
 from isaaclab.utils import configclass
-from isaaclab_marl.config import FIELD_LEVEL_SETTINGS, GOAL_LEVEL_SETTINGS, KICK_MODEL, APPLY_RANDOMIZATION
-from isaaclab_marl.config import KICK_MODEL
 
-from typing import TYPE_CHECKING
+from isaaclab_marl.config import APPLY_RANDOMIZATION, FIELD_LEVEL_SETTINGS, GOAL_LEVEL_SETTINGS, KICK_MODEL
 
 if TYPE_CHECKING:
     from torch import Tensor
@@ -213,9 +213,9 @@ class EnvData(EnvCoreData):
         ]
 
         self.agent_ids_control = torch.tensor(self.cfg.agent_id_control, device=self.device, dtype=torch.int32)
-        self.num_training_agents_per_env = torch.sum((self.agent_ids_control.flatten() == 1)).item()
-        self.num_policy_replay_agents_per_env = torch.sum((self.agent_ids_control.flatten() == 2)).item()
-        self.num_bots_per_env = torch.sum((self.agent_ids_control.flatten() == 3)).item()
+        self.num_training_agents_per_env = torch.sum(self.agent_ids_control.flatten() == 1).item()
+        self.num_policy_replay_agents_per_env = torch.sum(self.agent_ids_control.flatten() == 2).item()
+        self.num_bots_per_env = torch.sum(self.agent_ids_control.flatten() == 3).item()
 
         self.field_width = 3.6
         self.init_tensors()

@@ -150,7 +150,6 @@ class PPO:
             hid_states_batch,
             masks_batch,
         ) in generator:
-
             num_aug = 2
             # original batch size
             original_batch_size = obs_batch.shape[0]

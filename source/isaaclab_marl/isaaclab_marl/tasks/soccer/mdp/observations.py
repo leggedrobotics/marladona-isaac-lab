@@ -1,12 +1,12 @@
 from __future__ import annotations
-import torch
 
+import torch
 from torch.nn.functional import normalize
+from typing import TYPE_CHECKING
 
 from isaaclab.managers import SceneEntityCfg
-from isaaclab_marl.utils.math_utils import mirror_agent_pose
 
-from typing import TYPE_CHECKING
+from isaaclab_marl.utils.math_utils import mirror_agent_pose
 
 if TYPE_CHECKING:
     from isaaclab_marl.tasks.soccer.soccer_marl_env import SoccerMARLEnv

@@ -12,26 +12,27 @@ from isaaclab.managers import ObservationTermCfg as ObsTerm
 from isaaclab.managers import RewardTermCfg as RewTerm
 from isaaclab.managers import SceneEntityCfg
 from isaaclab.managers import TerminationTermCfg as DoneTerm
+from isaaclab.scene import InteractiveSceneCfg
+from isaaclab.terrains import TerrainImporterCfg
 
 ##
 # Scene definition
 ##
 from isaaclab.utils import configclass
-from isaaclab.scene import InteractiveSceneCfg
-from isaaclab.terrains import TerrainImporterCfg
 from isaaclab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 
 import isaaclab_marl.tasks.soccer.mdp as mdp
-from isaaclab_marl.assets.agent_cfg import AgentCfg, AgentTeamCfg
-from isaaclab_marl.assets.soccer_ball_cfg import BallCfg
-from isaaclab_marl.config import FIELD_LEVEL_SETTINGS, GOAL_LEVEL_SETTINGS, MARL_ROOT_DIR, WORLD_POS_NORMALIZATION
-from isaaclab_marl.managers.ma_action_manager import BallControlAction, BaseMovementAction
-from isaaclab_marl.terrains import TerrainCfg  # isort: skip
-from isaaclab_marl.assets.env_data import SoccerGameCfg
-
 import isaaclab_marl.tasks.soccer.mdp.observations as O
 import isaaclab_marl.tasks.soccer.mdp.rewards as R
 import isaaclab_marl.tasks.soccer.mdp.terminations as T
+from isaaclab_marl.assets.agent_cfg import AgentCfg, AgentTeamCfg
+from isaaclab_marl.assets.env_data import SoccerGameCfg
+from isaaclab_marl.assets.soccer_ball_cfg import BallCfg
+from isaaclab_marl.config import FIELD_LEVEL_SETTINGS, GOAL_LEVEL_SETTINGS, MARL_ROOT_DIR, WORLD_POS_NORMALIZATION
+from isaaclab_marl.managers.ma_action_manager import BallControlAction, BaseMovementAction
+
+from isaaclab_marl.terrains import TerrainCfg  # isort: skip
+
 
 
 @configclass

@@ -7,5 +7,4 @@
 
 from .actor_critic_beta import ActorCriticBeta
 
-
 __all__ = ["ActorCriticBeta"]

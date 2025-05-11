@@ -3,13 +3,13 @@
 """Launch Isaac Sim Simulator first."""
 
 import argparse
+import numpy as np
+import torch
 
 from isaaclab.app import AppLauncher
 
 # local imports
 import cli_args  # isort: skip
-import numpy as np
-import torch
 
 normal_repr = torch.Tensor.__repr__
 torch.Tensor.__repr__ = lambda self: f"{normal_repr(self)} \n {self.shape}, {self.min()}, {self.max()}"
@@ -43,26 +43,23 @@ simulation_app = app_launcher.app
 
 import gymnasium as gym
 import os
+from typing import TYPE_CHECKING
 
+from rsl_marl.runners import OnPolicyRunner
+from rsl_marl.utils.custom_vecenv_wrapper import CustomVecEnvWrapper
 from rsl_rl.runners import OnPolicyRunner
 
 from isaaclab.envs import DirectMARLEnv, multi_agent_to_single_agent
 from isaaclab.utils.dict import print_dict
 from isaaclab_tasks.utils import get_checkpoint_path, parse_env_cfg
 
-from rsl_marl.runners import OnPolicyRunner
-from rsl_marl.utils.custom_vecenv_wrapper import CustomVecEnvWrapper
-
 # Import extensions to set up environment tasks
 import isaaclab_marl.tasks  # noqa: F401
-
 from isaaclab_marl.config import WORKSPACE_ROOT_DIR
 
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
-    from isaaclab_marl.tasks.soccer.soccer_marl_env_cfg import SoccerMARLEnvCfg
     from isaaclab_marl.tasks.soccer.agents.soccer_marl_ppo_runner_cfg import SoccerMARLPPORunnerCfg
+    from isaaclab_marl.tasks.soccer.soccer_marl_env_cfg import SoccerMARLEnvCfg
 
 
 def main():

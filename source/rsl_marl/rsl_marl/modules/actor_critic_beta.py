@@ -6,6 +6,7 @@
 import torch
 import torch.nn as nn
 from torch.distributions import Beta
+
 from rsl_marl.modules.neighbor_net import NeighborNet
 
 
@@ -33,7 +34,7 @@ class ActorCriticBeta(nn.Module):
                 "ActorCriticBeta.__init__ got unexpected arguments, which will be ignored: "
                 + str([key for key in kwargs.keys()])
             )
-        super(ActorCriticBeta, self).__init__()
+        super().__init__()
         activation = get_activation(activation)
 
         self.num_actions = num_actions

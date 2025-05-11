@@ -1,4 +1,5 @@
 import torch
+
 from isaaclab.utils.math import euler_xyz_from_quat, quat_from_euler_xyz
 
 
@@ -8,10 +9,11 @@ def rotate2d(x, y, r):
     y_new = -torch.sin(r) * x + torch.cos(r) * y
     return torch.stack([x_new, y_new], dim=-1)
 
+
 @torch.jit.script
 def transform2dPos(ref_pose, pos):
-    diff = pos - ref_pose[...,:2]
-    return rotate2d(diff[...,0], diff[...,1], ref_pose[...,2] )
+    diff = pos - ref_pose[..., :2]
+    return rotate2d(diff[..., 0], diff[..., 1], ref_pose[..., 2])
 
 
 @torch.jit.script
@@ -26,6 +28,7 @@ def get_quat_from_yaw(yaw, euler_angle, env_ids=None):
     euler_angle[0][env_ids] = 0.0
     euler_angle[1][env_ids] = 0.0
     return quat_from_euler_xyz(euler_angle[0][env_ids], euler_angle[1][env_ids], yaw)
+
 
 @torch.jit.script
 def mirror_agent_pose(base_pose):

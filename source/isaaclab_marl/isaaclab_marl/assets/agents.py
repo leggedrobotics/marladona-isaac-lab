@@ -4,21 +4,22 @@ from __future__ import annotations
 # python
 import torch
 from torch import Tensor
-from typing import Sequence
+from typing import TYPE_CHECKING, Sequence
+
+import isaaclab.utils.math as math_utils
 
 from ..utils.math_utils import rotate2d, transform2dPos
-import isaaclab.utils.math as math_utils
+from .env_data import EnvCoreData, EnvData
 
 # from .modeling.kick_model_manager import KickModelManger
 # from .modeling.movement_model_manager import MovementModelManager
 
-from .env_data import EnvCoreData, EnvData
 
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .env_data import SoccerGameCfg
     from isaaclab.assets import RigidObjectCollection
+
+    from .env_data import SoccerGameCfg
 
 
 INACTIVE_AGENT_VALUE = float("nan")

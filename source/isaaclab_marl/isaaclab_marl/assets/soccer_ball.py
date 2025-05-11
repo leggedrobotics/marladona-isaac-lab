@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import torch
-
-from isaaclab_marl.assets.env_data import EnvCoreData, EnvData
-from .env_data import EnvCoreData, EnvData
 from typing import TYPE_CHECKING
 
+from isaaclab_marl.assets.env_data import EnvCoreData, EnvData
+
+from .env_data import EnvCoreData, EnvData
+
 if TYPE_CHECKING:
-    from .env_data import SoccerGameCfg
     from isaaclab.assets import RigidObject
+
+    from .env_data import SoccerGameCfg
 
 
 class SoccerBall(EnvCoreData):

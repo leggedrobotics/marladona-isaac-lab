@@ -11,20 +11,19 @@ import math
 import numpy as np
 import torch
 from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 from isaaclab.envs.manager_based_rl_env import ManagerBasedRLEnv
 from isaaclab.managers import CommandManager, CurriculumManager, TerminationManager
 from isaaclab.ui.widgets import ManagerLiveVisualizer
 
-from isaaclab_marl.managers.ma_action_manager import MultiAgentActionManager
-from isaaclab_marl.managers.ma_reward_manager import MultiAgentRewardManager
-from isaaclab_marl.managers.ma_observation_manager import MultiAgentObservationManager
-
-from isaaclab_marl.assets.env_data import EnvData
 from isaaclab_marl.assets.agents import Agents
+from isaaclab_marl.assets.env_data import EnvData
 from isaaclab_marl.assets.soccer_ball import SoccerBall
 from isaaclab_marl.managers.init_pos_manager import InitPosManager
-from typing import TYPE_CHECKING
+from isaaclab_marl.managers.ma_action_manager import MultiAgentActionManager
+from isaaclab_marl.managers.ma_observation_manager import MultiAgentObservationManager
+from isaaclab_marl.managers.ma_reward_manager import MultiAgentRewardManager
 
 if TYPE_CHECKING:
     from .soccer_marl_env_cfg import SoccerMARLEnvCfg

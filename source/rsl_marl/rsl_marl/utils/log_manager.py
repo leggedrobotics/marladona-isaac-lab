@@ -1,16 +1,14 @@
 import os
-import git
 import pathlib
-
-import torch
 import statistics
-
+import torch
 from collections import deque
 from torch.utils.tensorboard import SummaryWriter as TensorboardSummaryWriter
+from typing import TYPE_CHECKING
+
+import git
 
 from isaaclab_marl.config import WORKSPACE_ROOT_DIR
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from isaaclab_marl.tasks.soccer.soccer_marl_env import SoccerMARLEnv
@@ -27,7 +25,10 @@ def store_code_state(logdir, repositories):
             branch_name = repo.active_branch.name
         except TypeError as e:
             print(repo_name, ": ", e)
-        content = f"--- git status ---\n{repo.git.status()} \n\n\n--- git commit ---\n{repo.commit()}\n\n\n--- git branch ---\n{branch_name}\n\n\n--- git diff ---\n{repo.git.diff(t)}\n"
+        content = (
+            f"--- git status ---\n{repo.git.status()} \n\n\n--- git commit ---\n{repo.commit()}\n\n\n--- git branch"
+            f" ---\n{branch_name}\n\n\n--- git diff ---\n{repo.git.diff(t)}\n"
+        )
         with open(os.path.join(logdir, f"{repo_name}_git.diff"), "x", encoding="utf-8") as f:
             f.write(content)
 
@@ -141,7 +142,7 @@ class LogManager:
 
     def save_model(self, it, infos=None, path=None):
         if path is None:
-            path = os.path.join(self.log_dir, "model_{}.pt".format(it))
+            path = os.path.join(self.log_dir, f"model_{it}.pt")
         saved_dict = {
             "model_state_dict": self.alg.actor_critic.state_dict(),
             "optimizer_state_dict": self.alg.optimizer.state_dict(),
@@ -159,7 +160,7 @@ class LogManager:
         curriculum_level_folder = os.path.join(self.log_dir, "curriculum_levels")
         if not os.path.exists(curriculum_level_folder):
             os.makedirs(curriculum_level_folder)
-        path = os.path.join(curriculum_level_folder, "model_{}_level{}.pt".format(it, level))
+        path = os.path.join(curriculum_level_folder, f"model_{it}_level{level}.pt")
         self.save_model(it, path=path)
 
     def log(self, locs, width=80, pad=35):
@@ -215,11 +216,11 @@ class LogManager:
         for name in locs["metric_name_list"]:
             if len(reward_buffer) > 0:
                 self.writer.add_scalar(
-                    "Train/mean_{}".format(name), statistics.mean(locs["metric_buffer_dict"][name]), locs["it"]
+                    f"Train/mean_{name}", statistics.mean(locs["metric_buffer_dict"][name]), locs["it"]
                 )
             if len(reward_buffer_eval) > 0:
                 self.writer.add_scalar(
-                    "Eval/mean_{}".format(name), statistics.mean(locs["metric_buffer_dict_eval"][name]), locs["it"]
+                    f"Eval/mean_{name}", statistics.mean(locs["metric_buffer_dict_eval"][name]), locs["it"]
                 )
 
         str = f" \033[1m Learning iteration {locs['it']}/{locs['tot_iter']} \033[0m "

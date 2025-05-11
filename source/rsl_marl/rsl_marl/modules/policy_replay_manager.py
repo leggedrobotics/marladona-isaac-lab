@@ -1,8 +1,9 @@
 import os
-
 import torch
-from rsl_marl.modules import ActorCriticBeta
 from copy import deepcopy
+
+from rsl_marl.modules import ActorCriticBeta
+
 from isaaclab_marl.config import WORKSPACE_ROOT_DIR
 
 
@@ -52,7 +53,7 @@ class PolicyReplayManager:
 
     def load_buffer_policy(self, log_folder):
         models = [file for file in os.listdir(log_folder) if "model" in file]
-        models.sort(key=lambda m: "{0:0>15}".format(m))
+        models.sort(key=lambda m: f"{m:0>15}")
 
         self.num_levels = min(self.max_num_levels, len(models))
         pathes = [os.path.join(log_folder, model) for model in models][-self.num_levels :]
